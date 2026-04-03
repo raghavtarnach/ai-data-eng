@@ -1,0 +1,20 @@
+{
+  "project_id": "41d022fb-99a7-469e-9bdd-dbb3be2b5421",
+  "run_id": "ff856d26-4e7f-4bc9-876b-1181fc8c0d11",
+  "project_name": "E-Commerce Sales Analytics Pipeline",
+  "client_requirements": "Build an ETL pipeline for an e-commerce company that:\n\n1. EXTRACT: Read daily sales transaction data from a CSV file stored in blob storage.\n   The CSV contains columns: transaction_id, customer_id, product_id, product_name,\n   category, quantity, unit_price, discount_percent, transaction_date, store_location.\n\n2. TRANSFORM:\n   - Calculate total_amount = quantity * unit_price * (1 - discount_percent/100)\n   - Add a `transaction_month` column extracted from transaction_date\n   - Categorize transactions by amount: 'small' (<$50), 'medium' ($50-$200), 'large' (>$200)\n   - Remove any duplicate transaction_ids (keep first occurrence)\n   - Filter out transactions with quantity <= 0\n\n3. LOAD: Write the transformed data to a Parquet file partitioned by transaction_month.\n\n4. AGGREGATE: Create a summary table with:\n   - Total revenue per category per month\n   - Average transaction size per store_location\n   - Top 10 products by revenue\n\nThe pipeline should handle up to 10 million rows efficiently.\nData quality checks should validate: no nulls in transaction_id and customer_id,\nall amounts are positive, and dates are within the last 2 years.",
+  "data_sources": [
+    {
+      "name": "daily_sales",
+      "type": "blob",
+      "connection_ref": "BLOB_STORAGE_CONNECTION_STRING"
+    }
+  ],
+  "target_system": "Azure Data Lake Storage Gen2",
+  "expected_output": "Partitioned Parquet files with transformed sales data and summary aggregations",
+  "constraints": {
+    "performance": "Process 10M rows in under 5 minutes",
+    "cost": "$100/month maximum",
+    "tools": "pandas,pyarrow,sqlalchemy"
+  }
+}

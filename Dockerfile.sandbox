@@ -1,0 +1,22 @@
+# Sandbox base image for executing generated code.
+# Based on python:3.11-slim with pinned dependencies.
+# No network capability, non-root user for defense in depth.
+
+FROM python:3.11-slim
+
+# Create non-root user
+RUN groupadd -r sandbox && useradd -r -g sandbox -d /home/sandbox -m sandbox
+
+# Install pinned dependencies
+COPY requirements.sandbox.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
+    rm /tmp/requirements.txt
+
+# Set working directory
+WORKDIR /workspace
+
+# Switch to non-root user
+USER sandbox
+
+# Default entrypoint
+ENTRYPOINT ["python"]

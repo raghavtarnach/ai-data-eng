@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-data-eng"
+version = "1.0.0"
+description = "Production-grade multi-agent AI data engineering platform"
+requires-python = ">=3.9"
+dependencies = [
+    # Core
+    "pydantic>=2.5,<3",
+    # LLM / Agent framework
+    "langchain>=0.3,<1",
+    "langchain-anthropic>=0.3,<1",
+    "langchain-core>=0.3,<1",
+    # Async
+    "asyncio-extras>=1.3,<2; python_version<'3.13'",
+    # Database
+    "sqlalchemy[asyncio]>=2.0,<3",
+    "asyncpg>=0.29,<1",
+    # Docker
+    "docker>=7.0,<8",
+    # Memory (v2 — stub for now)
+    "chromadb>=0.4,<1",
+    # Observability
+    "opentelemetry-api>=1.22,<2",
+    "opentelemetry-sdk>=1.22,<2",
+    "opentelemetry-exporter-otlp>=1.22,<2",
+    # Utilities
+    "python-dotenv>=1.0,<2",
+    "uuid6>=2024.1,<2025",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9",
+    "pytest-asyncio>=0.23,<1",
+    "pytest-cov>=4.1,<6",
+    "ruff>=0.2,<1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
